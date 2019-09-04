@@ -61,7 +61,7 @@ items:
         containers:
         - args:
           - -r
-          - /pcap/my_capture.pcap
+          - /pcap/heartbleed.pcap
           - /scripts/extract-files.bro
           - /scripts/conn-add-geodata.bro
           - local
