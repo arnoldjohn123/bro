@@ -69,7 +69,7 @@ items:
           name: bro
           resources: {}
           volumeMounts:
-          - mountPath: /pcap/my-capture.pcap
+          - mountPath: /pcap/heartbleed.pcap
             name: bro-claim0
         restartPolicy: Always
         volumes:
