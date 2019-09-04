@@ -82,7 +82,7 @@ items:
             name: special-config
   status: {}
 - apiVersion: v1
-  kind: configMap
+  kind: ConfigMap
   #kind: PersistentVolumeClaim
   metadata:
     creationTimestamp: null
