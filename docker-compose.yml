@@ -4,8 +4,7 @@ items:
   kind: Service
   metadata:
     annotations:
-      kompose.cmd: /snap/kompose/1/./kompose-linux-amd64 convert -f docker-compose.yml
-        -o docker-compose.yaml
+      kompose.cmd: /snap/kompose/1/./kompose-linux-amd64 convert -f docker-compose.yml -o docker-compose.yaml
       kompose.version: 1.18.0 (06a2e56)
     creationTimestamp: null
     labels:
@@ -24,8 +23,7 @@ items:
   kind: Service
   metadata:
     annotations:
-      kompose.cmd: /snap/kompose/1/./kompose-linux-amd64 convert -f docker-compose.yml
-        -o docker-compose.yaml
+      kompose.cmd: /snap/kompose/1/./kompose-linux-amd64 convert -f docker-compose.yml -o docker-compose.yaml
       kompose.version: 1.18.0 (06a2e56)
     creationTimestamp: null
     labels:
@@ -44,8 +42,7 @@ items:
   kind: Deployment
   metadata:
     annotations:
-      kompose.cmd: /snap/kompose/1/./kompose-linux-amd64 convert -f docker-compose.yml
-        -o docker-compose.yaml
+      kompose.cmd: /snap/kompose/1/./kompose-linux-amd64 convert -f docker-compose.yml -o docker-compose.yaml
       kompose.version: 1.18.0 (06a2e56)
     creationTimestamp: null
     labels:
@@ -98,8 +95,7 @@ items:
   kind: Deployment
   metadata:
     annotations:
-      kompose.cmd: /snap/kompose/1/./kompose-linux-amd64 convert -f docker-compose.yml
-        -o docker-compose.yaml
+      kompose.cmd: /snap/kompose/1/./kompose-linux-amd64 convert -f docker-compose.yml -o docker-compose.yaml
       kompose.version: 1.18.0 (06a2e56)
     creationTimestamp: null
     labels:
@@ -128,8 +124,7 @@ items:
   kind: Deployment
   metadata:
     annotations:
-      kompose.cmd: /snap/kompose/1/./kompose-linux-amd64 convert -f docker-compose.yml
-        -o docker-compose.yaml
+      kompose.cmd: /snap/kompose/1/./kompose-linux-amd64 convert -f docker-compose.yml -o docker-compose.yaml
       kompose.version: 1.18.0 (06a2e56)
     creationTimestamp: null
     labels:
