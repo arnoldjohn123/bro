@@ -1,53 +1,156 @@
-bro:
-  image: "blacktop/bro:elastic"
-  command: -r /pcap/my_capture.pcap /scripts/extract-files.bro /scripts/conn-add-geodata.bro local #"Site::local_nets += { 192.168.99.0/24 }"
-  links:
-    - "elasticsearch:elasticsearch"
-  volumes:
-    - "./my_capture.pcap:/pcap/my_capture.pcap:rw"
-
-kibana:
-  image: "kibana:4.1.2"
-  ports:
-    - "80:5601"
-  links:
-    - "elasticsearch:elasticsearch"
-  restart: always
-
-elasticsearch:
-  image: "elasticsearch:1.7.3"
-  ports:
-    - "9200:9200"
-  # volumes_from:
-  #   - data
-  # volumes:
-  #   - "$PWD/es_data:/usr/share/elasticsearch/data"
-  #   - "$PWD/config:/usr/share/elasticsearch/config"
-  command: "-Des.network.host=0.0.0.0"
-  restart: always
-# logstash:
-#   image: "logstash:latest"
-#   ports:
-#     - "5000:5000"
-#   volumes:
-#     - "$PWD:/config-dir"
-#   command: logstash -f /config-dir/logstash.conf
-
-# nginx:
-#     build: .
-#     ports:
-#         - "443:443"
-#     volumes:
-#         - ./nginx.key:/etc/nginx/ssl/nginx.key
-#         - ./nginx.crt:/etc/nginx/ssl/nginx.crt
-#         - ./config/nginx/kibana.conf:/etc/nginx/conf.d/kibana.conf
-#     env_file:
-#         - ./secrets.env
-#     links:
-#       - kibana:kibana
-#     restart: always
-
-# data:
-#   image: "busybox"
-#   volumes:
-#     - "/usr/share/elasticsearch/data"
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: /snap/kompose/1/./kompose-linux-amd64 convert -f docker-compose.yml
+        -o docker-compose.yaml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: elasticsearch
+    name: elasticsearch
+  spec:
+    ports:
+    - name: "9200"
+      port: 9200
+      targetPort: 9200
+    selector:
+      io.kompose.service: elasticsearch
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: /snap/kompose/1/./kompose-linux-amd64 convert -f docker-compose.yml
+        -o docker-compose.yaml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: kibana
+    name: kibana
+  spec:
+    ports:
+    - name: "80"
+      port: 80
+      targetPort: 5601
+    selector:
+      io.kompose.service: kibana
+  status:
+    loadBalancer: {}
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: /snap/kompose/1/./kompose-linux-amd64 convert -f docker-compose.yml
+        -o docker-compose.yaml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: bro
+    name: bro
+  spec:
+    replicas: 1
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          io.kompose.service: bro
+      spec:
+        containers:
+        - args:
+          - -r
+          - /pcap/my_capture.pcap
+          - /scripts/extract-files.bro
+          - /scripts/conn-add-geodata.bro
+          - local
+          image: blacktop/bro:elastic
+          name: bro
+          resources: {}
+          volumeMounts:
+          - mountPath: /pcap/my-capture.pcap
+            name: bro-claim0
+        restartPolicy: Always
+        volumes:
+        - name: bro-claim0
+          persistentVolumeClaim:
+            claimName: bro-claim0
+  status: {}
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    creationTimestamp: null
+    labels:
+      io.kompose.service: bro-claim0
+    name: bro-claim0
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 100Mi
+  status: {}
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: /snap/kompose/1/./kompose-linux-amd64 convert -f docker-compose.yml
+        -o docker-compose.yaml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: elasticsearch
+    name: elasticsearch
+  spec:
+    replicas: 1
+    strategy: {}
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          io.kompose.service: elasticsearch
+      spec:
+        containers:
+        - args:
+          - -Des.network.host=0.0.0.0
+          image: elasticsearch:1.7.3
+          name: elasticsearch
+          ports:
+          - containerPort: 9200
+          resources: {}
+        restartPolicy: Always
+  status: {}
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: /snap/kompose/1/./kompose-linux-amd64 convert -f docker-compose.yml
+        -o docker-compose.yaml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: kibana
+    name: kibana
+  spec:
+    replicas: 1
+    strategy: {}
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          io.kompose.service: kibana
+      spec:
+        containers:
+        - image: kibana:4.1.2
+          name: kibana
+          ports:
+          - containerPort: 5601
+          resources: {}
+        restartPolicy: Always
+  status: {}
+kind: List
+metadata: {}
