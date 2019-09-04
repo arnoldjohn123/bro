@@ -61,7 +61,7 @@ items:
         containers:
         - args:
           - -r
-          - /pcap/heartbleed.pcap
+          - /etc/config
           - /scripts/extract-files.bro
           - /scripts/conn-add-geodata.bro
           - local
@@ -69,16 +69,21 @@ items:
           name: bro
           resources: {}
           volumeMounts:
-          - mountPath: /pcap/heartbleed.pcap
+          - mountPath: /etc/config
             name: bro-claim0
         restartPolicy: Always
         volumes:
         - name: bro-claim0
-          persistentVolumeClaim:
-            claimName: bro-claim0
+          #persistentVolumeClaim:
+            #claimName: bro-claim0
+          configMap:
+        # Provide the name of the ConfigMap containing the files you want
+        # to add to the container
+            name: special-config
   status: {}
 - apiVersion: v1
-  kind: PersistentVolumeClaim
+  kind: configMap
+  #kind: PersistentVolumeClaim
   metadata:
     creationTimestamp: null
     labels:
